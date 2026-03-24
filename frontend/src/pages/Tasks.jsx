@@ -13,7 +13,7 @@ const Tasks = () => {
     const fetchTasks = async () => {
       try {
         const response = await axiosInstance.get('/api/tasks', {
-          headers: { Authorization: `Bearer ${user.token}` },
+          headers: { Authorization: `Bearer ${user.token}` }
         });
         setTasks(response.data);
       } catch (error) {
@@ -25,13 +25,8 @@ const Tasks = () => {
   }, [user]);
 
   return (
-    <div className="container mx-auto p-6">
-      <TaskForm
-        tasks={tasks}
-        setTasks={setTasks}
-        editingTask={editingTask}
-        setEditingTask={setEditingTask}
-      />
+    <div className='container mx-auto p-6'>
+      <TaskForm tasks={tasks} setTasks={setTasks} editingTask={editingTask} setEditingTask={setEditingTask} />
       <TaskList tasks={tasks} setTasks={setTasks} setEditingTask={setEditingTask} />
     </div>
   );

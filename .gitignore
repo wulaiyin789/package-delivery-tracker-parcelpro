@@ -1,0 +1,17 @@
+# Ignore any irrelevant files and directories
+node_modules/
+
+# Compiled output
+dist/
+build/
+
+# Environment variables file
+.env
+
+# Logs
+*.log
+*.cache
+*.tmp
+
+# System Files
+.DS_Store
