@@ -1,5 +1,9 @@
 import { useState, useEffect } from 'react';
+
+// Auth
 import { useAuth } from '../context/AuthContext';
+
+// Config
 import axiosInstance from '../axiosConfig';
 
 const Profile = () => {
