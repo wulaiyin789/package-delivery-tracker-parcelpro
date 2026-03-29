@@ -1,11 +1,11 @@
 // Status label map
 const statusLabel = {
-  pending: 'Order Received',
-  picked_up: 'Picked Up',
-  in_transit: 'In Transit',
-  out_for_delivery: 'Out for Delivery',
-  delivered: 'Delivered',
-  cancelled: 'Cancelled'
+  PENDING: 'Pending',
+  PICKED_UP: 'Picked Up',
+  IN_TRANSIT: 'In Transit',
+  OUT_OF_DELIVERY: 'Out for Delivery',
+  DELIVERED: 'Delivered',
+  CANCELLED: 'Cancelled'
 };
 
 // Shipping rates and ETA
