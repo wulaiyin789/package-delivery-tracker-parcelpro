@@ -10,19 +10,51 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    name: Build and Test
+    runs-on: self-hosted
+
+    strategy:
+      matrix:
+        node-version: [22]
+
+    environment: MONGO_URI
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-
+        uses: actions/checkout@v3
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: "14"
+          node-version: ${{ matrix.node-version }}
 
-      - name: Install dependencies
-        run: npm install
+      - name: Check Environment Variables
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          PORT: ${{ secrets.PORT }}
+        run: |
+          echo "MONGO_URI is ${{ env.MONGO_URI }}"
+          echo "JWT_SECRET is ${{ env.JWT_SECRET }}"
+          echo "PORT is ${{ env.PORT }}"
 
-      - name: Run tests
+      - name: Install dependencies (BE)
+        run: |
+          npm install --global yarn
+          yarn --version
+          yarn install
+
+      - name: Install dependencies (FE)
+        working-directory: ./frontend
+        # Check disk space
+        run: |
+          df -h
+          yarn install
+          yarn build
+
+      - name: Run tests (BE)
+        working-directory: ./backend
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          PORT: ${{ secrets.PORT }}
         run: npm test
