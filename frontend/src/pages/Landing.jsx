@@ -1,7 +1,18 @@
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+
+// Auth
+import { useAuth } from '../context/AuthContext';
 
 const Landing = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
 
   return (
     <div className='min-h-screen bg-gray-100 flex flex-col items-center justify-center px-4'>
