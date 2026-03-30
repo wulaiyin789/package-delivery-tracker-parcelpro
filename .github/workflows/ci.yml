@@ -1,4 +1,4 @@
-name: CI
+name: Backend CI
 
 on:
   push:
@@ -17,7 +17,7 @@ jobs:
       matrix:
         node-version: [22]
 
-    environment: Backend
+    environment: MONGO_URI
 
     steps:
       - name: Checkout code
@@ -37,7 +37,11 @@ jobs:
           echo "JWT_SECRET is ${{ env.JWT_SECRET }}"
           echo "PORT is ${{ env.PORT }}"
 
+      - name: Stop AWS PM2 processes
+        run: pm2 stop all # Stop all PM2-managed processes in AWS
+
       - name: Install dependencies (BE)
+        working-directory: ./backend
         run: |
           npm install --global yarn
           yarn --version
@@ -58,3 +62,18 @@ jobs:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           PORT: ${{ secrets.PORT }}
         run: npm test
+
+      - name: Install dependencies using npm clean install
+        run: npm ci
+
+      - name: Write production secrets to .env file in AWS
+        run: |
+            cd ./backend # Navigate to backend folder
+            touch .env
+            echo "${{ secrets.PROD }}" > .env
+
+      - name: Start AWS PM2 processes
+        run: pm2 start all
+
+      - name: Restart AWS PM2 processes
+        run: pm2 restart all
