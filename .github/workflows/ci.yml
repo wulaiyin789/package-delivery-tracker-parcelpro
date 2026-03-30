@@ -3,10 +3,10 @@ name: CI
 on:
   push:
     branches:
-      - feature
+      - ci-config
   pull_request:
     branches:
-      - feature
+      - ci-config
 
 jobs:
   build:
