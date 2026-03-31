@@ -10,19 +10,19 @@ const router = express.Router();
 
 //TODO Add User Create Route (Admin only) in the future
 
-// GET /api/users/search?q= 
+// GET /api/users/search?q= (PDT-66)
 router.get('/search', protect, authorize('ADMIN'), searchUsers);
 
-// PUT /api/users/activate/:id
+// PUT /api/users/activate/:id (PDT-73)
 router.put('/activate/:id', protect, authorize('ADMIN'), activateUser);
 
-// PUT /api/users/deactivate/:id
+// PUT /api/users/deactivate/:id (PDT-73, PDT-74, PDT-75)
 router.put('/deactivate/:id', protect, authorize('ADMIN'), deactivateUser);
 
-// DELETE /api/users/:id
+// DELETE /api/users/:id (PDT-73, PDT-74, PDT-75)
 router.delete('/:id', protect, authorize('ADMIN'), deleteUser);
 
-// PUT /api/users/:id/role (PDT-78)
+// PUT /api/users/:id/role (PDT-78, PDT-79, PDT-80)
 router.put('/:id/role', protect, authorize('ADMIN'), updateRole);
 
 module.exports = router;
