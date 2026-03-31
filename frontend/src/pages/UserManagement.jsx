@@ -31,6 +31,7 @@ const STATUS_STYLES = {
   INACTIVE: 'bg-red-100 text-red-500'
 };
 
+// PDT-72, PDT-76
 const UserManagement = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -56,7 +57,7 @@ const UserManagement = () => {
   // Debounce search input to avoid excessive API calls
   const debouncedSearch = useDebounce(search, 400);
 
-  // Show toast briefly ──
+  // Show toast briefly
   const showToast = (msg) => {
     setToast(msg);
     setTimeout(() => setToast(''), 3000);
@@ -394,7 +395,7 @@ const UserManagement = () => {
 
       {/* Toast Notification */}
       {toast && (
-        <div className='fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-gray-900 text-white text-sm font-medium px-5 py-3 rounded-xl shadow-xl animate-fade-in'>
+        <div className='fixed top-6 left-1/2 -translate-x-1/2 z-50 bg-gray-900 text-white text-sm font-medium px-5 py-3 rounded-xl shadow-xl animate-fade-in'>
           {toast}
         </div>
       )}
