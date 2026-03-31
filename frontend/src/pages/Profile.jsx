@@ -10,8 +10,11 @@ import axiosInstance from '../axiosConfig';
 import Loading from '../components/Loading';
 import Header from '../components/Header';
 
+// PDT-68, PDT-70, PDT-71
 const Profile = () => {
   const { user } = useAuth(); // Access user token from context
+
+  // States
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -19,6 +22,7 @@ const Profile = () => {
     address: ''
   });
   const [loading, setLoading] = useState(false);
+  const [toast, setToast] = useState('');
 
   useEffect(() => {
     // Fetch profile data from the backend
@@ -35,7 +39,7 @@ const Profile = () => {
           address: response.data.address || ''
         });
       } catch (error) {
-        alert('Failed to fetch profile. Please try again.');
+        showToast('Failed to fetch profile. Please try again.');
       } finally {
         setLoading(false);
       }
@@ -51,12 +55,18 @@ const Profile = () => {
       await axiosInstance.put('/api/auth/profile', formData, {
         headers: { Authorization: `Bearer ${user.token}` }
       });
-      alert('Profile updated successfully!');
+      showToast('Profile updated successfully!');
     } catch (error) {
-      alert('Failed to update profile. Please try again.');
+      showToast('Failed to update profile. Please try again.');
     } finally {
       setLoading(false);
     }
+  };
+
+  // Show toast briefly
+  const showToast = (msg) => {
+    setToast(msg);
+    setTimeout(() => setToast(''), 3000);
   };
 
   if (loading) {
@@ -68,9 +78,10 @@ const Profile = () => {
       {/* Header */}
       <div className='flex items-center gap-3 mb-6'>
         <div className='w-full'>
-          <Header title={'Track Packages'} user={user} />
+          <Header title={'Profile'} user={user} />
         </div>
       </div>
+
       <div className='flex justify-center bg-gray-100 px-4 pt-16'>
         <div className='flex flex-col items-center bg-white rounded-2xl shadow-xl w-full max-w-sm px-8 py-10'>
           <form onSubmit={handleSubmit} className='w-full'>
@@ -124,6 +135,13 @@ const Profile = () => {
           </form>
         </div>
       </div>
+
+      {/* Toast Notification */}
+      {toast && (
+        <div className='fixed top-6 left-1/2 -translate-x-1/2 z-50 bg-gray-900 text-white text-sm font-medium px-5 py-3 rounded-xl shadow-xl animate-fade-in'>
+          {toast}
+        </div>
+      )}
     </div>
   );
 };

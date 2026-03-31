@@ -17,6 +17,7 @@ const META_ITEMS = (info) => [
   }
 ];
 
+// PDT-47
 const TrackPackage = () => {
   const { trackingId } = useParams();
   const navigate = useNavigate();
@@ -47,7 +48,7 @@ const TrackPackage = () => {
     fetchAll();
   }, [trackingId]);
 
-  // Loading ──
+  // Loading
   if (loading)
     return (
       <div className='flex min-h-screen bg-gray-100'>
@@ -57,7 +58,7 @@ const TrackPackage = () => {
       </div>
     );
 
-  // Error ──
+  // Error
   if (error)
     return (
       <div className='flex min-h-screen bg-gray-100'>

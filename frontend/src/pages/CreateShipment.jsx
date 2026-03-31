@@ -17,6 +17,7 @@ import Header from '../components/Header';
 
 const inputClass = `w-full border border-gray-200 focus:border-blue-500 rounded-lg px-3 py-2.5 text-sm outline-none bg-white`;
 
+// PDT-51, PDT-53, PDT-54
 const CreateShipment = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
