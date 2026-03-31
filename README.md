@@ -1,24 +1,113 @@
 
-**Assessment 1.2 (Total Marks **20**)**
+<p align="center">
+  <img src="https://raw.githubusercontent.com/wulaiyin789/ifn636-web/master/frontend/public/logo192.png" alt="Parcel Pro Logo" width="120" />
+</p>
 
-Assignment: **Software requirements analysis and design (**Full-Stack CRUD Application Development with DevOps Practices**)**
+<h1 align="center">Parcel Pro - Shipping & Tracking System</h1>
 
+## Description
+
+A full-stack universal shipping and package tracking web application featuring user authentication, package lifecycle management, real-time update tracking, and admin control. Built with Node.js + Express backend, MongoDB data storage, and React frontend.
+
+## Features
+
+- User registration and login (JWT-based auth)
+- Role-based access: customer, courier, admin
+  - Create: Create User
+  - Read: Fetch user data from database
+  - Update: Activate or Deactivate user account (Soft delete)
+  - Delete: Delete a user completely
+- Create and manage shipments
+  - Create: Create Shipment
+  - Read: Fetch shipment details from database
+  - Update: Update shipment details
+  - Delete: Delete shipment and relevant data
+- Update tracking status, history, location
+  - Create: Create Tracking on backend
+  - Read: Fetch tracking based on trackingId (Public)
+  - Update: Update tracking status
+  - Delete: Delete tracking data on backend
+- View package delivery progress
+- Admin user management and shipment oversight
+- API-driven architecture with frontend and backend separation
+
+## Future improvements
+- Add real-time notification (Underlying schema is built)
+- Pagination for table (Underlying backend is built)
+
+## Setup
+
+### Prerequisites
+
+- Node.js 22.x or later
+- npm 11.x or later
+- MongoDB (local or Atlas)
+
+### Backend
+
+1. open terminal
+2. cd backend
+3. `npm install`
+4. configure `backend/config/db.js` with your MongoDB URI
+5. copy sample env variables or add required keys (JWT secret, DB URL, etc.)
+
+### Frontend
+
+1. open terminal
+2. cd frontend
+3. `npm install`
+
+## Start for development
+
+### Backend
+
+```bash
+cd backend
+npm run dev
+```
+
+### Frontend
+
+```bash
+cd frontend
+npm run dev
+```
+
+Open http://localhost:3000 and ensure backend is running (default http://localhost:5001).
+
+## Build production
+
+### Frontend
+
+```bash
+cd frontend
+npm run build
+```
+
+This creates optimized static assets in `frontend/build`.
+
+### Backend
+
+```bash
+cd backend
+npm run start
+```
+
+or use `npm run pm2`/`pm2 start server.js` as preferred.
+
+## Critical information
+
+- Ensure `backend` and `frontend` use the same API base URL via `frontend/src/axiosConfig.jsx` (default may be `/api` or `http://localhost:5001`)
+- MongoDB connection must be valid before server startup.
+- If using production, set `NODE_ENV=production` and configure CORS/HTTPS.
+- Keep JWT secret safe and do not commit `.env` to Git.
+
+## Built by
+
+Peter Wu (Student No.)
 
 ---
 
-**Objective**
+**GitHub link of the starter project: [https://github.com/wulaiyin789/ifn636-web}**
 
-For this assessment, you have already been assigned a project. Your task is to develop a system that implements CRUD (Create, Read, Update, Delete) operations based on the selected project. The system should include both a user panel and an admin panel. Depending on the nature of your chosen project, you may decide how many CRUD operations are required to support the functionality of the system. You have been provided with a starter project that includes user authentication using Node.js, React.js, and MongoDB, your should extend this application based on your assigned project requirements. Ensure that the implemented features are appropriate and meaningful for your selected project. Your project should include the following:
-In this assignment you will complete the following tasks:
-
-* **Basic Version Control using GitHub**
-* **Development, CI/CD Integration for Automated Deployment**
-* **Project report**
-
- 
----
-
-**GitHub link of the starter project: **[https://github.com/nahaQUT/sampleapp_IFQ636.git](https://github.com/nahaQUT/sampleapp_IFQ636.git)
-
----
-
+Assignment: “Software Requirements Analysis and Design: LearnWords-English — A Full-Stack CRUD Application with DevOps Practices”
