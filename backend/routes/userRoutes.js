@@ -22,7 +22,7 @@ router.put('/deactivate/:id', protect, authorize('ADMIN'), deactivateUser);
 // DELETE /api/users/:id (PDT-73, PDT-74, PDT-75)
 router.delete('/:id', protect, authorize('ADMIN'), deleteUser);
 
-// PUT /api/users/:id/role (PDT-78, PDT-79, PDT-80)
+// PUT /api/users/:id/role (PDT-78)
 router.put('/:id/role', protect, authorize('ADMIN'), updateRole);
 
 module.exports = router;
