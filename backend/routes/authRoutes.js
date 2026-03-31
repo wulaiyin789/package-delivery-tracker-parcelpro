@@ -20,7 +20,7 @@ router.post('/logout', protect, logoutUser);
 // GET /api/auth/profile
 router.get('/profile', protect, getProfile);
 
-// PUT /api/auth/profile
+// PUT /api/auth/profile (PDT-69, PDT-70)
 router.put('/profile', protect, updateUserProfile);
 
 module.exports = router;
