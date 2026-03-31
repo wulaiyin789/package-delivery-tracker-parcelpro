@@ -45,11 +45,11 @@ A full-stack universal shipping and package tracking web application featuring u
 
 ### Backend
 
-1. open terminal
+1. Open terminal
 2. cd backend
 3. `npm install`
-4. configure `backend/config/db.js` with your MongoDB URI
-5. copy sample env variables or add required keys (JWT secret, DB URL, etc.)
+4. Configure `backend/config/db.js` with your MongoDB URI
+5. Copy sample env variables or add required keys (JWT secret, DB URL, etc.)
 
 ### Frontend
 
