@@ -1,28 +1,79 @@
-name: CI
+name: Backend CI
 
 on:
   push:
     branches:
-      - main
+      - ci-config
   pull_request:
     branches:
-      - main
+      - ci-config
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    name: Build and Test
+    runs-on: [aws-self-hosted]
+
+    strategy:
+      matrix:
+        node-version: [22]
+
+    environment: MONGO_URI
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-
+        uses: actions/checkout@v3
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: "14"
+          node-version: ${{ matrix.node-version }}
 
-      - name: Install dependencies
-        run: npm install
+      - name: Check Environment Variables
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          PORT: ${{ secrets.PORT }}
+        run: |
+          echo "MONGO_URI is ${{ env.MONGO_URI }}"
+          echo "JWT_SECRET is ${{ env.JWT_SECRET }}"
+          echo "PORT is ${{ env.PORT }}"
 
-      - name: Run tests
+      - name: Stop AWS PM2 processes
+        run: pm2 stop all # Stop all PM2-managed processes in AWS
+
+      - name: Install dependencies (BE)
+        working-directory: ./backend
+        run: |
+          npm install --global yarn
+          yarn --version
+          yarn install
+
+      - name: Install dependencies (FE)
+        working-directory: ./frontend
+        # Check disk space
+        run: |
+          df -h
+          yarn install
+          yarn build
+
+      - name: Run tests (BE)
+        working-directory: ./backend
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          PORT: ${{ secrets.PORT }}
         run: npm test
+
+      - name: Install dependencies using npm clean install
+        run: npm ci
+
+      - name: Write production secrets to .env file in AWS
+        run: |
+            cd ./backend # Navigate to backend folder
+            touch .env
+            echo "${{ secrets.PROD }}" > .env
+
+      - name: Start AWS PM2 processes
+        run: pm2 start all
+
+      - name: Restart AWS PM2 processes
+        run: pm2 restart all
