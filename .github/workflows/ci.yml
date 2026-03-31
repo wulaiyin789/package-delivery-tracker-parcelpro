@@ -11,7 +11,7 @@ on:
 jobs:
   build:
     name: Build and Test
-    runs-on: self-hosted
+    runs-on: [aws-self-hosted]
 
     strategy:
       matrix:
