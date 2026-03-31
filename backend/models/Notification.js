@@ -11,6 +11,7 @@ const NotificationSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Shipment'
     },
+    trackingId: { type: String }, // Optional for easier querying
     type: { type: String, enum: ['EMAIL', 'SMS', 'PUSH'], default: 'PUSH' },
     message: { type: String, required: true },
     isRead: { type: Boolean, default: false }
