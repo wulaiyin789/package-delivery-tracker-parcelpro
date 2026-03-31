@@ -38,7 +38,7 @@ jobs:
           echo "PORT is ${{ env.PORT }}"
 
       - name: Stop AWS PM2 processes
-        run: pm2 stop all # Stop all PM2-managed processes in AWS
+        run: pm2 stop all || true
 
       - name: Install dependencies (BE)
         working-directory: ./backend
@@ -46,6 +46,7 @@ jobs:
           npm install --global yarn
           yarn --version
           yarn install
+          pm2 stop all || true
 
       - name: Install dependencies (FE)
         working-directory: ./frontend
