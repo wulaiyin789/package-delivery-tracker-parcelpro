@@ -46,7 +46,6 @@ jobs:
           npm install --global yarn
           yarn --version
           yarn install
-          pm2 stop all || true
 
       - name: Install dependencies (FE)
         working-directory: ./frontend
@@ -69,15 +68,17 @@ jobs:
 
       - name: Write production secrets to .env file in AWS
         run: |
-            cd ./backend # Navigate to backend folder
+            cd ./backend
             touch .env
             echo "${{ secrets.PROD }}" > .env
 
       - name: Start AWS PM2 processes for backend
+        working-directory: ./backend
         run: pm2 start "yarn start" --name "backend"
 
       - name: Start AWS PM2 processes for frontend
-        run: pm2 serve build 3000 --name "frontend" --spa
+        working-directory: ./frontend
+        run: pm2 serve build/ 3000 --name "frontend" --spa
 
       - name: Restart AWS PM2 processes
         run: pm2 restart all
