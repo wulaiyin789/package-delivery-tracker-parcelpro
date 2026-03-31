@@ -8,7 +8,11 @@ const { protect, authorize } = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
-//TODO Add User Create Route (Admin only) in the future
+//TODO Add User Creation Route (Admin only) in the future
+// POST router.post('/add', protect, authorize('ADMIN'), addUser);
+
+//TODO Add Forgot Password feature (Admin only) in the future (PDT-62)
+// POST router.post('/forgot-password', protect, authorize('ADMIN'), forgotPassword);
 
 // GET /api/users/search?q= (PDT-66)
 router.get('/search', protect, authorize('ADMIN'), searchUsers);

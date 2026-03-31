@@ -73,7 +73,7 @@ const Login = () => {
           </div>
         </div>
 
-        {/* Forgot Password */}
+        {/* //TODO PDT-61, PDT-64 - Forgot Password (Future development)  */}
         <button
           className='self-start text-xs text-blue-500 hover:text-blue-600 mb-5 mt-1'
           onClick={() => navigate('/forgot-password')}>
