@@ -166,6 +166,7 @@ const UserManagement = () => {
   const stats = {
     active: users.filter((u) => u.status).length,
     admins: users.filter((u) => u.role === 'ADMIN').length,
+    customers: users.filter((u) => u.role === 'CUSTOMER').length,
     couriers: users.filter((u) => u.role === 'COURIER').length
   };
 
@@ -181,6 +182,7 @@ const UserManagement = () => {
         <div className='flex gap-4 mb-6 flex-wrap'>
           <StatesCard label='Admins' value={stats.admins} valueClass='text-violet-600' />
           <StatesCard label='Couriers' value={stats.couriers} valueClass='text-blue-600' />
+          <StatesCard label='Customers' value={stats.customers} valueClass='text-blue-600' />
           <StatesCard label='Active' value={stats.active} valueClass='text-red-500' />
         </div>
 
