@@ -3,10 +3,10 @@ name: Backend CI
 on:
   push:
     branches:
-      - ci-config
+      - feature
   pull_request:
     branches:
-      - ci-config
+      - feature
 
 jobs:
   build:
@@ -38,7 +38,7 @@ jobs:
           echo "PORT is ${{ env.PORT }}"
 
       - name: Stop AWS PM2 processes
-        run: pm2 stop all # Stop all PM2-managed processes in AWS
+        run: pm2 stop all || true
 
       - name: Install dependencies (BE)
         working-directory: ./backend
@@ -68,12 +68,17 @@ jobs:
 
       - name: Write production secrets to .env file in AWS
         run: |
-            cd ./backend # Navigate to backend folder
+            cd ./backend
             touch .env
             echo "${{ secrets.PROD }}" > .env
 
-      - name: Start AWS PM2 processes
-        run: pm2 start all
+      - name: Start AWS PM2 processes for backend
+        working-directory: ./backend
+        run: pm2 start "yarn start" --name "backend"
+
+      - name: Start AWS PM2 processes for frontend
+        working-directory: ./frontend
+        run: pm2 serve build/ 3000 --name "frontend" --spa
 
       - name: Restart AWS PM2 processes
         run: pm2 restart all
