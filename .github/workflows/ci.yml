@@ -37,8 +37,10 @@ jobs:
           echo "JWT_SECRET is ${{ env.JWT_SECRET }}"
           echo "PORT is ${{ env.PORT }}"
 
-      - name: Stop AWS PM2 processes
-        run: pm2 stop all || true
+      - name: Stop and delete AWS PM2 processes
+        run: |
+          pm2 stop all || true
+          pm2 delete all || true
 
       - name: Install dependencies (BE)
         working-directory: ./backend

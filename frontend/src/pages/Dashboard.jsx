@@ -224,9 +224,7 @@ const Dashboard = () => {
                         onClick={() => setDeleteModal({ id: s._id, trackingId: s.trackingId })}
                         disabled={s.status === 'DELIVERED'}
                         title={s.status === 'DELIVERED' ? 'Cannot delete a delivered shipment' : 'Delete shipment'}
-                        className='flex items-center justify-center shrink-0 w-9 h-9
-                                bg-red-50 hover:bg-red-100 text-red-500 rounded-lg disabled:opacity-40
-                                disabled:cursor-not-allowed text-base'>
+                        className='flex items-center justify-center shrink-0 w-9 h-9 bg-red-50 hover:bg-red-100 text-red-500 rounded-lg disabled:opacity-40disabled:cursor-not-allowed text-base'>
                         <FaTrash />
                       </button>
                     )}

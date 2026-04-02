@@ -252,8 +252,7 @@ const CreateShipment = () => {
                       key={opt.type}
                       type='button'
                       onClick={() => setFormData({ ...formData, shippingType: opt.type })}
-                      className={`flex items-center justify-between px-5 py-4 rounded-xl 
-                                border-2 text-left transition-all duration-150 w-full
+                      className={`flex items-center justify-between px-5 py-4 rounded-xl border-2 text-left transition-all duration-150 w-full
                                 ${
                                   formData.shippingType === opt.type
                                     ? 'border-blue-600 bg-blue-50'
