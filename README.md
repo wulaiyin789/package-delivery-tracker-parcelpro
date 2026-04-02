@@ -110,8 +110,9 @@ or use `npm run pm2`/`pm2 start "yarn start" --name=backend` as preferred.
 - If using production, set `NODE_ENV=production` and configure CORS/HTTPS.
 - Keep JWT secret safe and do not commit `.env` to Git.
 
-## Public URL (AWS EC2)
-[Click Here](http://ec2-3-24-134-227.ap-southeast-2.compute.amazonaws.com)
+## AWS EC2 instance
+
+i-033f94a1f89795ce9
 
 ## Account Info
 For testing purpose, the following credential can be used.
