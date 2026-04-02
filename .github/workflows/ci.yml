@@ -1,0 +1,84 @@
+name: Backend CI
+
+on:
+  push:
+    branches:
+      - feature
+  pull_request:
+    branches:
+      - feature
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: [aws-self-hosted]
+
+    strategy:
+      matrix:
+        node-version: [22]
+
+    environment: MONGO_URI
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Check Environment Variables
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          PORT: ${{ secrets.PORT }}
+        run: |
+          echo "MONGO_URI is ${{ env.MONGO_URI }}"
+          echo "JWT_SECRET is ${{ env.JWT_SECRET }}"
+          echo "PORT is ${{ env.PORT }}"
+
+      - name: Stop AWS PM2 processes
+        run: pm2 stop all || true
+
+      - name: Install dependencies (BE)
+        working-directory: ./backend
+        run: |
+          npm install --global yarn
+          yarn --version
+          yarn install
+
+      - name: Install dependencies (FE)
+        working-directory: ./frontend
+        # Check disk space
+        run: |
+          df -h
+          yarn install
+          yarn build
+
+      - name: Run tests (BE)
+        working-directory: ./backend
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          PORT: ${{ secrets.PORT }}
+        run: npm test
+
+      - name: Install dependencies using npm clean install
+        run: npm ci
+
+      - name: Write production secrets to .env file in AWS
+        run: |
+            cd ./backend
+            touch .env
+            echo "${{ secrets.PROD }}" > .env
+
+      - name: Start AWS PM2 processes for backend
+        working-directory: ./backend
+        run: pm2 start "yarn start" --name "backend"
+
+      - name: Start AWS PM2 processes for frontend
+        working-directory: ./frontend
+        run: pm2 serve build/ 3000 --name "frontend" --spa
+
+      - name: Restart AWS PM2 processes
+        run: pm2 restart all
