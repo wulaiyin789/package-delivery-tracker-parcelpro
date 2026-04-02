@@ -82,6 +82,7 @@ const getProfile = async (req, res) => {
       name: user.name,
       email: user.email,
       university: user.university,
+      phone: user.phone,
       address: user.address
     });
   } catch (error) {
@@ -96,10 +97,11 @@ const updateUserProfile = async (req, res) => {
     const user = await User.findById(req.user._id);
     if (!user) return res.status(404).json({ success: false, message: 'User not found' });
 
-    const { name, email, university, address } = req.body;
+    const { name, email, university, phone, address } = req.body;
     user.name = name || user.name;
     user.email = email || user.email;
     user.university = university || user.university;
+    user.phone = phone || user.phone;
     user.address = address || user.address;
 
     const updatedUser = await user.save();
@@ -109,6 +111,7 @@ const updateUserProfile = async (req, res) => {
       name: updatedUser.name,
       email: updatedUser.email,
       university: updatedUser.university,
+      phone: updatedUser.phone,
       address: updatedUser.address,
       token: generateToken(updatedUser.id)
     });

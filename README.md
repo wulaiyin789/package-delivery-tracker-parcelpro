@@ -42,20 +42,24 @@ A full-stack universal shipping and package tracking web application featuring u
 - Node.js 22.x or later
 - npm 11.x or later
 - MongoDB (local or Atlas)
+- yarn
+
+1. npm install -g yarn
+2. Continue the following steps
 
 ### Backend
 
-1. open terminal
+1. Open terminal
 2. cd backend
-3. `npm install`
-4. configure `backend/config/db.js` with your MongoDB URI
-5. copy sample env variables or add required keys (JWT secret, DB URL, etc.)
+3. `yarn`
+4. Configure `backend/config/db.js` with your MongoDB URI
+5. Copy sample env variables or add required keys (JWT secret, DB URL, etc.)
 
 ### Frontend
 
 1. open terminal
 2. cd frontend
-3. `npm install`
+3. `yarn`
 
 ## Start for development
 
@@ -63,14 +67,16 @@ A full-stack universal shipping and package tracking web application featuring u
 
 ```bash
 cd backend
-npm run dev
+yarn dev
 ```
+
+Environment credential is shown on `.env.example`
 
 ### Frontend
 
 ```bash
 cd frontend
-npm run dev
+yarn dev
 ```
 
 Open http://localhost:3000 and ensure backend is running (default http://localhost:5001).
@@ -86,14 +92,16 @@ npm run build
 
 This creates optimized static assets in `frontend/build`.
 
+Use `pm2 serve build/ 3000 "yarn start" --name=frontend --spa` as preferred.
+
 ### Backend
 
 ```bash
 cd backend
-npm run start
+yarn start
 ```
 
-or use `npm run pm2`/`pm2 start server.js` as preferred.
+or use `npm run pm2`/`pm2 start "yarn start" --name=backend` as preferred.
 
 ## Critical information
 
@@ -102,12 +110,28 @@ or use `npm run pm2`/`pm2 start server.js` as preferred.
 - If using production, set `NODE_ENV=production` and configure CORS/HTTPS.
 - Keep JWT secret safe and do not commit `.env` to Git.
 
+## Public URL (AWS EC2)
+[Click Here](http://ec2-3-24-134-227.ap-southeast-2.compute.amazonaws.com)
+
+## Account Info
+For testing purpose, the following credential can be used.
+
+```js
+// Admin credential
+username=test@admin.com
+password=ifn636_admin_123456
+
+// Customer credential
+username=test@customer.com
+password=ifn636_customer_567890
+```
+
 ## Built by
 
-Peter Wu (Student No.)
+Wu Lai Yin Peter
 
 ---
 
-**GitHub link of the starter project: [https://github.com/wulaiyin789/ifn636-web}**
+**GitHub link of the starter project: [https://github.com/wulaiyin789/package-delivery-tracker-parcelpro}**
 
-Assignment: “Software Requirements Analysis and Design: LearnWords-English — A Full-Stack CRUD Application with DevOps Practices”
+Assignment: “IFN636 Software Requirements Analysis and Design: LearnWords-English — A Full-Stack CRUD Application with DevOps Practices”
