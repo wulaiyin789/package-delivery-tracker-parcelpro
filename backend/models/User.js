@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema(
     role: { type: String, enum: ['CUSTOMER', 'COURIER', 'ADMIN'], default: 'CUSTOMER' },
     university: { type: String },
     address: { type: String },
+    phone: { type: String },
     status: { type: String, enum: ['ACTIVE', 'INACTIVE'], default: 'ACTIVE' },
     tokenVersion: { type: Number, default: 0 }
   },

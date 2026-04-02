@@ -19,6 +19,7 @@ const Profile = () => {
     name: '',
     email: '',
     university: '',
+    phone: '',
     address: ''
   });
   const [loading, setLoading] = useState(false);
@@ -36,6 +37,7 @@ const Profile = () => {
           name: response.data.name,
           email: response.data.email,
           university: response.data.university || '',
+          phone: response.data.phone || '',
           address: response.data.address || ''
         });
       } catch (error) {
@@ -88,7 +90,7 @@ const Profile = () => {
             <h1 className='text-2xl font-bold mb-4 text-center'>Your Profile</h1>
 
             <div className='w-full mb-4'>
-              <label className='block text-sm text-gray-700 font-medium mb-1'>Email</label>
+              <label className='block text-sm text-gray-700 font-medium mb-1'>Name</label>
               <input
                 type='text'
                 placeholder='Name'
@@ -108,7 +110,7 @@ const Profile = () => {
               />
             </div>
             <div className='w-full mb-4'>
-              <label className='block text-sm text-gray-700 font-medium mb-1'>Email</label>
+              <label className='block text-sm text-gray-700 font-medium mb-1'>University</label>
               <input
                 type='text'
                 placeholder='University'
@@ -118,7 +120,17 @@ const Profile = () => {
               />
             </div>
             <div className='w-full mb-4'>
-              <label className='block text-sm text-gray-700 font-medium mb-1'>Email</label>
+              <label className='block text-sm text-gray-700 font-medium mb-1'>Phone</label>
+              <input
+                type='text'
+                placeholder='Phone'
+                value={formData.phone}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                className='w-full border border-gray-200 focus:border-blue-500 rounded-lg px-3 py-2.5 text-sm outline-none'
+              />
+            </div>
+            <div className='w-full mb-4'>
+              <label className='block text-sm text-gray-700 font-medium mb-1'>Address</label>
               <input
                 type='text'
                 placeholder='Address'
