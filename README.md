@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/wulaiyin789/ifn636-web/master/frontend/public/logo192.png" alt="Parcel Pro Logo" width="120" />
+  <img src="https://raw.githubusercontent.com/wulaiyin789/package-delivery-tracker-parcelpro/main/frontend/public/logo192.png" alt="Parcel Pro Logo" width="120" />
 </p>
 
 <h1 align="center">Parcel Pro - Shipping & Tracking System</h1>
