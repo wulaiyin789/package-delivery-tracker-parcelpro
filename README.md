@@ -148,13 +148,13 @@ pm2 start "yarn start" --name "backend"
 
 ## 🔄 CI/CD Pipeline
 
-This project uses **GitHub Actions** with an **AWS EC2 self-hosted runner** and **PM2** for automated deployment on every push or pull request to the `feature` branch.
+This project uses **GitHub Actions** with an **AWS EC2 self-hosted runner** and **PM2** for automated deployment on every push or pull request to the `main` branch.
 
 
 ### Step-by-Step Breakdown
 
 **1. Trigger**
-The pipeline fires on any `push` or `pull_request` targeting the `feature` branch.
+The pipeline fires on any `push` or `pull_request` targeting the `main` branch.
 
 **2. Runner**
 Jobs run on `aws-self-hosted` — your EC2 instance running the GitHub Actions runner agent. This means deployment happens directly on the production/staging server without any SSH or SCP steps.
