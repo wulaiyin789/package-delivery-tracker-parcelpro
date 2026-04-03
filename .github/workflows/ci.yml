@@ -70,15 +70,15 @@ jobs:
 
       - name: Write production secrets to .env file in AWS (FE)
         run: |
-            cd ./frontend
-            touch .env
-            echo "${{ secrets.PROD_FE }}" > .env
+          cd ./frontend
+          touch .env
+          echo "${{ secrets.PROD_FE }}" > .env
 
       - name: Write production secrets to .env file in AWS (BE)
         run: |
-            cd ./backend
-            touch .env
-            echo "${{ secrets.PROD }}" > .env
+          cd ./backend
+          touch .env
+          echo "${{ secrets.PROD }}" > .env
 
       - name: Start AWS PM2 processes for backend
         working-directory: ./backend
