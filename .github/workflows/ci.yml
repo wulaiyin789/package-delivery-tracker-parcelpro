@@ -20,13 +20,17 @@ jobs:
     environment: MONGO_URI
 
     steps:
+      # Step 1
       - name: Checkout code
         uses: actions/checkout@v3
+
+      # Step 2
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
 
+      # Step 3
       - name: Check Environment Variables
         env:
           MONGO_URI: ${{ secrets.MONGO_URI }}
@@ -37,11 +41,13 @@ jobs:
           echo "JWT_SECRET is ${{ env.JWT_SECRET }}"
           echo "PORT is ${{ env.PORT }}"
 
+      # Step 4
       - name: Stop and delete AWS PM2 processes
         run: |
           pm2 stop all || true
           pm2 delete all || true
 
+      # Step 5
       - name: Install dependencies (BE)
         working-directory: ./backend
         run: |
@@ -49,6 +55,14 @@ jobs:
           yarn --version
           yarn install
 
+      # Step 6
+      - name: Write production secrets to .env file in AWS (FE)
+        run: |
+          cd ./frontend
+          touch .env
+          echo "${{ secrets.PROD_FE }}" > .env
+
+      # Step 7
       - name: Install dependencies (FE)
         working-directory: ./frontend
         # Check disk space
@@ -57,6 +71,7 @@ jobs:
           yarn install
           yarn build
 
+      # Step 8
       - name: Run tests (BE)
         working-directory: ./backend
         env:
@@ -65,28 +80,27 @@ jobs:
           PORT: ${{ secrets.PORT }}
         run: npm test
 
+      # Step 9
       - name: Install dependencies using npm clean install
         run: npm ci
 
-      - name: Write production secrets to .env file in AWS (FE)
-        run: |
-          cd ./frontend
-          touch .env
-          echo "${{ secrets.PROD_FE }}" > .env
-
+      # Step 10
       - name: Write production secrets to .env file in AWS (BE)
         run: |
           cd ./backend
           touch .env
           echo "${{ secrets.PROD }}" > .env
 
+      # Step 11
       - name: Start AWS PM2 processes for backend
         working-directory: ./backend
         run: pm2 start "yarn start" --name "backend"
 
+      # Step 12
       - name: Start AWS PM2 processes for frontend
         working-directory: ./frontend
         run: pm2 serve build/ 3000 --name "frontend" --spa
 
+      # Step 13
       - name: Restart AWS PM2 processes
         run: pm2 restart all
