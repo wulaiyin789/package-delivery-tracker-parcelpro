@@ -46,16 +46,16 @@ const Dashboard = () => {
     }
   };
 
-  // DELETE /api/shipments/:id — admin only
+  // DELETE /api/shipments/:id/hard — admin only
   const confirmDelete = async () => {
     setDeleting(true);
 
     try {
-      await axiosInstance.delete(`/api/shipments/${deleteModal.id}`);
+      await axiosInstance.delete(`/api/shipments/${deleteModal.id}/hard`);
       setShipments((prev) => prev.filter((s) => s._id !== deleteModal.id));
       setDeleteModal(null);
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed to cancel shipment');
+      alert(err.response?.data?.message || 'Failed to delete shipment');
     } finally {
       setDeleting(false);
     }
@@ -236,13 +236,13 @@ const Dashboard = () => {
         )}
       </main>
 
-      {/* Cancel Confirmation Modal */}
+      {/* Delete Confirmation Modal */}
       {deleteModal && (
         <div className='fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4'>
           <div className='bg-white rounded-2xl shadow-2xl w-full max-w-sm px-8 py-8 text-center'>
             <div className='text-5xl mb-4'>⚠️</div>
             <h3 className='text-lg font-bold text-gray-900 mb-2'>Are you sure?</h3>
-            <p className='text-sm text-gray-500 mb-1'>This will permanently cancel the shipment:</p>
+            <p className='text-sm text-gray-500 mb-1'>This will permanently delete the shipment:</p>
             <p className='text-sm font-bold text-gray-800 mb-6'>{deleteModal.trackingId}</p>
             <p className='text-xs text-red-400 mb-6'>This action cannot be undone.</p>
 
@@ -251,7 +251,7 @@ const Dashboard = () => {
                 onClick={() => setDeleteModal(null)}
                 disabled={deleting}
                 className='flex-1 py-2.5 border border-gray-200 rounded-lg text-sm font-semibold text-gray-700 hover:bg-gray-50 disabled:opacity-50'>
-                Cancel
+                Delete
               </button>
               <button
                 onClick={confirmDelete}

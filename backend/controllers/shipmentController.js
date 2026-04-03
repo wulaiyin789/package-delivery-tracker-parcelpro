@@ -180,7 +180,7 @@ const updateShipmentStatus = async (req, res) => {
   }
 };
 
-// DELETE /api/shipments/:id
+// DELETE /api/shipments/:id/cancel
 // Cancel shipment – owner or admin
 // Cannot cancel if already delivered
 const cancelShipment = async (req, res) => {

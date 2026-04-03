@@ -218,8 +218,8 @@ describe('TC-09 - PUT /api/shipments/:id/status — customer blocked', () => {
   });
 });
 
-// TC-10  DELETE /api/shipments/:id — admin hard delete
-describe('TC-10 - DELETE /api/shipments/:id — admin hard delete', () => {
+// TC-10  DELETE /api/shipments/:id/hard — admin hard delete
+describe('TC-10 - DELETE /api/shipments/:id/hard — admin hard delete', () => {
   it('should permanently delete a shipment and return deleted trackingId', async () => {
     const customer = await createUser({ email: 'customer@test.com', role: 'CUSTOMER' });
     const admin = await createUser({ email: 'admin@test.com', role: 'ADMIN' });
@@ -227,7 +227,7 @@ describe('TC-10 - DELETE /api/shipments/:id — admin hard delete', () => {
 
     const res = await chai
       .request(app)
-      .delete(`/api/shipments/${shipment._id}`)
+      .delete(`/api/shipments/${shipment._id}/hard`)
       .set('Authorization', `Bearer ${admin.token}`);
 
     expect(res).to.have.status(200);
@@ -241,24 +241,24 @@ describe('TC-10 - DELETE /api/shipments/:id — admin hard delete', () => {
   });
 });
 
-// TC-11  DELETE /api/shipments/:id — soft cancel by owner
-describe('TC-11 - DELETE /api/shipments/:id — customer soft cancels own shipment', () => {
+// TC-11 DELETE /api/shipments/:id/cancel — soft cancel by admin
+describe('TC-11 - DELETE /api/shipments/:id/cancel — admin soft cancels own shipment', () => {
   it('should set status to cancelled without removing from DB', async () => {
-    const { token } = await createUser({ email: 'cancel@test.com' });
+    const { token } = await createUser({ email: 'admin@test.com', role: 'ADMIN' });
     const shipment = await createShipment(token);
 
     const res = await chai
       .request(app)
-      .delete(`/api/shipments/${shipment._id}`)
+      .delete(`/api/shipments/${shipment._id}/cancel`)
       .set('Authorization', `Bearer ${token}`);
 
     expect(res).to.have.status(200);
     expect(res.body.success).to.be.true;
 
     // Confirm it still exists with cancelled status
-    const check = await chai.request(app).get(`/api/shipments/${shipment._id}`).set('Authorization', `Bearer ${token}`);
+    const check = await chai.request(app).get(`/api/shipments/${shipment.trackingId}`).set('Authorization', `Bearer ${token}`);
 
-    expect(check.body.data.status).to.equal('cancelled');
+    expect(check.body.data.status).to.equal('CANCELLED');
   });
 });
 
