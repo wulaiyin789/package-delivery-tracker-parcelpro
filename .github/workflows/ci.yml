@@ -68,7 +68,13 @@ jobs:
       - name: Install dependencies using npm clean install
         run: npm ci
 
-      - name: Write production secrets to .env file in AWS
+      - name: Write production secrets to .env file in AWS (FE)
+        run: |
+            cd ./frontend
+            touch .env
+            echo "${{ secrets.PROD_FE }}" > .env
+
+      - name: Write production secrets to .env file in AWS (BE)
         run: |
             cd ./backend
             touch .env
