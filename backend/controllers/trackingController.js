@@ -9,10 +9,7 @@ const { statusLabel, shippingRates } = require('../enums/enums');
 // Track package by tracking ID, anyone can look up a tracking ID publicly
 const getTrackingStatus = async (req, res) => {
   try {
-    // Support regex for partial match (e.g. "PDT-1234" can be searched with "1234")
-    const shipment = await Shipment.findOne({
-      trackingId: new RegExp(req.params.trackingId, 'i')
-    })
+    const shipment = await Shipment.findOne({ trackingId: req.params.trackingId })
       .populate('courier', 'name phone')
       .populate('customer', 'name');
 
@@ -29,46 +26,46 @@ const getTrackingStatus = async (req, res) => {
       .populate('updatedBy', 'name role');
 
     const responseData = {
-        success: true,
-        data: {
-          trackingId: shipment.trackingId,
-          status: shipment.status,
-          statusLabel: statusLabel[shipment.status] || shipment.status,
-          estimatedDelivery: shipment.estimatedDelivery,
-          shippingCost: shipment.shippingCost,
-          parcel: {
-            weight: shipment.parcel?.weight ? `${shipment.parcel.weight} kg` : 'N/A',
-            dimensions: shipment.parcel?.dimensions || 'N/A',
-            description: shipment.parcel?.description || 'N/A',
-            type: shipment.parcel?.type || 'STANDARD'
-          },
-          sender: {
-            name: shipment.sender?.name,
-            city: shipment.sender?.address?.city
-          },
-          recipient: {
-            name: shipment.recipient?.name,
-            city: shipment.recipient?.address?.city
-          },
-          courier: shipment.courier ? { name: shipment.courier.name, phone: shipment.courier.phone } : null,
-          latestEvent: latestEvent
-            ? {
-                status: latestEvent.status,
-                location: latestEvent.location,
-                description: latestEvent.description,
-                timestamp: latestEvent.createdAt
-              }
-            : null,
-          createdAt: shipment.createdAt
-        }
+      success: true,
+      data: {
+        trackingId: shipment.trackingId,
+        status: shipment.status,
+        statusLabel: statusLabel[shipment.status] || shipment.status,
+        estimatedDelivery: shipment.estimatedDelivery,
+        shippingCost: shipment.shippingCost,
+        parcel: {
+          weight: shipment.parcel?.weight ? `${shipment.parcel.weight} kg` : 'N/A',
+          dimensions: shipment.parcel?.dimensions || 'N/A',
+          description: shipment.parcel?.description || 'N/A',
+          type: shipment.parcel?.type || 'STANDARD'
+        },
+        sender: {
+          name: shipment.sender?.name,
+          city: shipment.sender?.address?.city
+        },
+        recipient: {
+          name: shipment.recipient?.name,
+          city: shipment.recipient?.address?.city
+        },
+        courier: shipment.courier ? { name: shipment.courier.name, phone: shipment.courier.phone } : null,
+        latestEvent: latestEvent
+          ? {
+              status: latestEvent.status,
+              location: latestEvent.location,
+              description: latestEvent.description,
+              timestamp: latestEvent.createdAt
+            }
+          : null,
+        createdAt: shipment.createdAt
       }
+    };
 
     // Limit details if user is not logged in or not related to the shipment
     if (!req.user) {
       // Public view – only show basic info without sensitive details
       delete responseData.data.sender;
       delete responseData.data.recipient;
-      
+
       res.status(200).json(responseData);
     } else {
       res.status(200).json(responseData);
