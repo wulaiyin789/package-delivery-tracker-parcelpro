@@ -57,7 +57,7 @@ const createShipment = async (token) => {
 };
 
 // TC-01  POST /api/auth/register — successful registration
-describe('TC-01 | POST /api/auth/register — successful registration', () => {
+describe('TC-01 - POST /api/auth/register — successful registration', () => {
   it('should register a new user and return token + user object', async () => {
     const res = await chai.request(app).post('/api/auth/register').send({
       name: 'Test User',
@@ -74,7 +74,7 @@ describe('TC-01 | POST /api/auth/register — successful registration', () => {
 });
 
 // TC-02  POST /api/auth/login — Invalid email or password
-describe('TC-02 | POST /api/auth/login — Invalid email or password', () => {
+describe('TC-02 - POST /api/auth/login — Invalid email or password', () => {
   it('should return 401 when password is wrong', async () => {
     await createUser({ email: 'test1@test.com' });
 
@@ -90,7 +90,7 @@ describe('TC-02 | POST /api/auth/login — Invalid email or password', () => {
 });
 
 // TC-03  POST /api/auth/logout — token invalidation
-describe('TC-03 | POST /api/auth/logout — token invalidation via tokenVersion', () => {
+describe('TC-03 - POST /api/auth/logout — token invalidation via tokenVersion', () => {
   it('should logout and reject the old token on next request', async () => {
     const { token } = await createUser({ email: 'logout@test.com' });
 
@@ -109,7 +109,7 @@ describe('TC-03 | POST /api/auth/logout — token invalidation via tokenVersion'
 });
 
 // TC-04  GET /api/shipments — unauthenticated request
-describe('TC-04 | GET /api/shipments — blocked without token', () => {
+describe('TC-04 - GET /api/shipments — blocked without token', () => {
   it('should return 401 when no Authorization header is sent', async () => {
     const res = await chai.request(app).get('/api/shipments');
 
@@ -120,7 +120,7 @@ describe('TC-04 | GET /api/shipments — blocked without token', () => {
 });
 
 // TC-05  POST /api/shipments — customer creates a shipment
-describe('TC-05 | POST /api/shipments — successful shipment creation', () => {
+describe('TC-05 - POST /api/shipments — successful shipment creation', () => {
   it('should create a shipment and return a trackingId', async () => {
     const { token } = await createUser({ email: 'customer@test.com' });
 
@@ -154,7 +154,7 @@ describe('TC-05 | POST /api/shipments — successful shipment creation', () => {
 });
 
 // TC-06  GET /api/tracking/:trackingId — public tracking
-describe('TC-06 | GET /api/tracking/:trackingId — public access', () => {
+describe('TC-06 - GET /api/tracking/:trackingId — public access', () => {
   it('should return limited shipment info without authentication', async () => {
     const { token } = await createUser({ email: 'test@test.com' });
     const shipment = await createShipment(token);
@@ -173,7 +173,7 @@ describe('TC-06 | GET /api/tracking/:trackingId — public access', () => {
 });
 
 // TC-07  GET /api/tracking/:trackingId — invalid tracking ID
-describe('TC-07 | GET /api/tracking/:trackingId — not found', () => {
+describe('TC-07 - GET /api/tracking/:trackingId — not found', () => {
   it('should return 404 for a non-existent tracking ID', async () => {
     const res = await chai.request(app).get('/api/tracking/AWS-0000-INVALID');
 
@@ -183,7 +183,7 @@ describe('TC-07 | GET /api/tracking/:trackingId — not found', () => {
 });
 
 // TC-08  PUT /api/shipments/:id/status — admin updates status
-describe('TC-08 | PUT /api/shipments/:id/status — admin status update', () => {
+describe('TC-08 - PUT /api/shipments/:id/status — admin status update', () => {
   it('should allow admin to update shipment status to IN_TRANSIT', async () => {
     const customer = await createUser({ email: 'customer@test.com', role: 'CUSTOMER' });
     const admin = await createUser({ email: 'admin@test.com', role: 'ADMIN' });
@@ -201,8 +201,25 @@ describe('TC-08 | PUT /api/shipments/:id/status — admin status update', () => 
   });
 });
 
-// TC-09  DELETE /api/shipments/:id — admin hard delete
-describe('TC-09 | DELETE /api/shipments/:id — admin hard delete', () => {
+// TC-09  PUT /api/shipments/:id/status — customer cannot update status
+describe('TC-09 - PUT /api/shipments/:id/status — customer blocked', () => {
+  it('should return 403 when a customer tries to update shipment status', async () => {
+    const customer = await createUser({ email: 'custupd@test.com', role: 'CUSTOMER' });
+    const shipment = await createShipment(customer.token);
+
+    const res = await chai
+      .request(app)
+      .put(`/api/shipments/${shipment._id}/status`)
+      .set('Authorization', `Bearer ${customer.token}`)
+      .send({ status: 'in_transit' });
+
+    expect(res.status).to.be.oneOf([403, 401]);
+    expect(res.body.success).to.be.false;
+  });
+});
+
+// TC-10  DELETE /api/shipments/:id/hard — admin hard delete
+describe('TC-10 - DELETE /api/shipments/:id/hard — admin hard delete', () => {
   it('should permanently delete a shipment and return deleted trackingId', async () => {
     const customer = await createUser({ email: 'customer@test.com', role: 'CUSTOMER' });
     const admin = await createUser({ email: 'admin@test.com', role: 'ADMIN' });
@@ -210,7 +227,7 @@ describe('TC-09 | DELETE /api/shipments/:id — admin hard delete', () => {
 
     const res = await chai
       .request(app)
-      .delete(`/api/shipments/${shipment._id}`)
+      .delete(`/api/shipments/${shipment._id}/hard`)
       .set('Authorization', `Bearer ${admin.token}`);
 
     expect(res).to.have.status(200);
@@ -221,5 +238,119 @@ describe('TC-09 | DELETE /api/shipments/:id — admin hard delete', () => {
     const trackRes = await chai.request(app).get(`/api/tracking/${shipment.trackingId}`);
 
     expect(trackRes).to.have.status(404);
+  });
+});
+
+// TC-11 DELETE /api/shipments/:id/cancel — soft cancel by admin
+describe('TC-11 - DELETE /api/shipments/:id/cancel — admin soft cancels own shipment', () => {
+  it('should set status to cancelled without removing from DB', async () => {
+    const { token } = await createUser({ email: 'admin@test.com', role: 'ADMIN' });
+    const shipment = await createShipment(token);
+
+    const res = await chai
+      .request(app)
+      .delete(`/api/shipments/${shipment._id}/cancel`)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(res).to.have.status(200);
+    expect(res.body.success).to.be.true;
+
+    // Confirm it still exists with cancelled status
+    const check = await chai.request(app).get(`/api/shipments/${shipment.trackingId}`).set('Authorization', `Bearer ${token}`);
+
+    expect(check.body.data.status).to.equal('CANCELLED');
+  });
+});
+
+// TC-12  GET /api/shipments/:id — owner can fetch their own shipment
+describe('TC-12 - GET /api/shipments/:id — owner access', () => {
+  it('should return the shipment details for the owner', async () => {
+    const customer = await createUser({ email: 'customer@test.com', role: 'CUSTOMER' });
+    const shipment = await createShipment(customer.token);
+
+    const res = await chai
+      .request(app)
+      .get(`/api/shipments/${shipment.trackingId}`)
+      .set('Authorization', `Bearer ${customer.token}`);
+
+    expect(res).to.have.status(200);
+    expect(res.body.success).to.be.true;
+    expect(res.body.data._id).to.equal(shipment._id);
+  });
+});
+
+// TC-13  GET /api/shipments/:id — another customer cannot access
+describe('TC-13 - GET /api/shipments/:id — unauthorised customer', () => {
+  it('should return 403 when a different customer tries to access the shipment', async () => {
+    const owner = await createUser({ email: 'customer1@test.com' });
+    const other = await createUser({ email: 'customer2@test.com' });
+    const shipment = await createShipment(owner.token);
+
+    const res = await chai
+      .request(app)
+      .get(`/api/shipments/${shipment.trackingId}`)
+      .set('Authorization', `Bearer ${other.token}`);
+
+    expect(res.status).to.be.oneOf([403, 404]);
+    expect(res.body.success).to.be.false;
+  });
+});
+
+// TC-14  GET /api/users/search — customer blocked
+describe('TC-14 - GET /api/users/search — non-admin blocked', () => {
+  it('should return 403 when a customer tries to search users', async () => {
+    const customer = await createUser({ email: 'customer@test.com', role: 'CUSTOMER' });
+
+    const res = await chai
+      .request(app)
+      .get('/api/users/search')
+      .set('Authorization', `Bearer ${customer.token}`)
+      .query({ q: 'test' });
+
+    expect(res.status).to.be.oneOf([403, 401]);
+    expect(res.body.success).to.be.false;
+  });
+});
+
+// TC-15  GET /api/users/search — admin searches by name
+describe('TC-15 - GET /api/users/search — admin searches by name', () => {
+  it('should return matching users and correct pagination fields', async () => {
+    const admin = await createUser({ email: 'admin@test.com', role: 'ADMIN' });
+    await createUser({ email: 'customer1@test.com', name: 'Customer 1' });
+    await createUser({ email: 'customer1@test.com', name: 'Customer 2' });
+
+    const res = await chai
+      .request(app)
+      .get('/api/users/search')
+      .set('Authorization', `Bearer ${admin.token}`)
+      .query({ q: 'Customer', page: 1, limit: 10 });
+
+    expect(res).to.have.status(200);
+    expect(res.body.success).to.be.true;
+    expect(res.body.data).to.be.an('array').with.length.greaterThan(0);
+    expect(res.body).to.have.all.keys('success', 'count', 'total', 'page', 'pages', 'data');
+    res.body.data.forEach((u) => expect(u).to.not.have.property('password'));
+  });
+});
+
+// TC-16  PUT /api/users/:id (deactivate) — cannot deactivate another admin
+describe('TC-16 - PUT /api/users/deactivate/:id — cannot deactivate another admin', () => {
+  it('should return 403 when trying to deactivate an ADMIN account', async () => {
+    const admin1 = await createUser({ email: 'admin1@test.com', role: 'ADMIN' });
+    const admin2 = await createUser({ email: 'admin2@test.com', role: 'ADMIN' });
+
+    const res1 = await chai
+      .request(app)
+      .get(`/api/users/search`)
+      .set('Authorization', `Bearer ${admin1.token}`)
+      .query({ q: admin2.email, page: 1, limit: 10 });
+
+    const res2 = await chai
+      .request(app)
+      .put(`/api/users/deactivate/${res1.body.data[0]._id}`)
+      .set('Authorization', `Bearer ${admin1.token}`);
+
+    expect(res2).to.have.status(403);
+    expect(res2.body.success).to.be.false;
   });
 });
