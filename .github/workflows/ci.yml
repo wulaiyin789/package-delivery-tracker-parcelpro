@@ -103,4 +103,6 @@ jobs:
 
       # Step 13
       - name: Restart AWS PM2 processes
-        run: pm2 restart all
+        run: |
+          pm2 restart all
+          pm2 save
