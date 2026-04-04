@@ -1,6 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+// Config
 import axiosInstance from '../axiosConfig';
+
+// Components
+import { ReactComponent as Logo } from '../logo.svg';
 
 const Register = () => {
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
@@ -33,8 +38,8 @@ const Register = () => {
   return (
     <div className='flex items-center justify-center min-h-screen bg-gray-100 px-4 py-10'>
       <div className='flex flex-col items-center bg-white rounded-2xl shadow-xl w-full max-w-sm px-8 py-10'>
-        <div className='flex items-center justify-center w-14 h-14 bg-blue-600 rounded-xl text-3xl mb-4 shadow-md'>
-          📦
+        <div className='flex items-center justify-center rounded-xl text-3xl mb-6'>
+          <Logo className='w-14 h-14' />
         </div>
 
         <h2 className='text-xl font-bold text-gray-900 mb-1'>Create Account</h2>
