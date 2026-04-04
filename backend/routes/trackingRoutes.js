@@ -5,10 +5,10 @@ const { getTrackingStatus, getTrackingHistory, calculateCostAndTime } = require(
 
 const { protect, getUserFromToken } = require('../middleware/authMiddleware');
 
-// GET /api/tracking/:trackingId (PDT-48, PDT-49)
+// GET /api/tracking/:trackingId (PDT-48, PDT-49) (Public route)
 router.get('/:trackingId', getUserFromToken, getTrackingStatus);
 
-// GET /api/tracking/:trackingId/history (PDT-48, PDT-49)
+// GET /api/tracking/:trackingId/history (PDT-48, PDT-49) (Public route)
 router.get('/:trackingId/history', getTrackingHistory);
 
 // GET /api/tracking/cost/:shipmentId (PDT-37, PDT-38)
