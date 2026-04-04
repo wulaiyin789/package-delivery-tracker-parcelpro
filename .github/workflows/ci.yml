@@ -3,10 +3,10 @@ name: Backend CI
 on:
   push:
     branches:
-      - feature
+      - main
   pull_request:
     branches:
-      - feature
+      - main
   # Allow manual trigger from GitHub UI for testing and debugging
   workflow_dispatch: 
 
