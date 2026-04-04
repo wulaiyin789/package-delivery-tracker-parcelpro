@@ -7,6 +7,8 @@ on:
   pull_request:
     branches:
       - feature
+  # Allow manual trigger from GitHub UI for testing and debugging
+  workflow_dispatch: 
 
 jobs:
   build:
