@@ -7,6 +7,9 @@ import { useAuth } from '../context/AuthContext';
 // Config
 import axiosInstance from '../axiosConfig';
 
+// Components
+import { ReactComponent as Logo } from '../logo.svg';
+
 const Login = () => {
   // States
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -41,8 +44,8 @@ const Login = () => {
   return (
     <div className='flex items-center justify-center min-h-screen bg-gray-100 px-4 pt-16'>
       <div className='flex flex-col items-center bg-white rounded-2xl shadow-xl w-full max-w-sm px-8 py-10'>
-        <div className='flex items-center justify-center w-14 h-14 bg-blue-600 rounded-xl text-3xl mb-6 shadow-md'>
-          📦
+        <div className='flex items-center justify-center rounded-xl text-3xl mb-6'>
+          <Logo className='w-14 h-14' />
         </div>
 
         {/* Email */}
